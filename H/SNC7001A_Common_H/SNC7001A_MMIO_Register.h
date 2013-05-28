@@ -1,0 +1,152 @@
+#ifndef _SNC7001A_MMIO_REG
+#define _SNC7001A_MMIO_REG
+
+//======================= CS1 Serial =========================
+#define Reg_SF_CTRL 			(*(unsigned int*)(0xF800U))
+#define Reg_SF_CMD              (*(unsigned int*)(0xF801U))
+#define Reg_SF_ADDR_H 			(*(unsigned int*)(0xF802U))
+#define Reg_SF_ADDR_L 			(*(unsigned int*)(0xF803U))
+#define Reg_SF_WRITE_DATA 		(*(unsigned int*)(0xF804U))
+#define Reg_SF_READ_DATA 		(*(unsigned int*)(0xF805U))
+
+//===================== CS2 8080 MCU_IF ======================
+#define Reg_MPU_CTRL1 			(*(unsigned int*)(0xF900U))
+#define Reg_MPU_CTRL2 			(*(unsigned int*)(0xF901U))
+#define Reg_MPU_DATA 			(*(unsigned int*)(0xF902U))
+
+//======================= CS1 Parallel =======================
+#define Reg_PF1_CTRL 			(*(unsigned int*)(0xFB00U))
+#define Reg_PF1_CMD	 			(*(unsigned int*)(0xFB01U))
+#define Reg_PF1_ADDR_H 	 		(*(unsigned int*)(0xFB02U))
+#define Reg_PF1_ADDR_L 			(*(unsigned int*)(0xFB03U))
+#define Reg_PF1_WRITE_DATA 		(*(unsigned int*)(0xFB04U))
+#define Reg_PF1_READ_DATA 		(*(unsigned int*)(0xFB05U))
+
+//======================= CS2 Parallel =======================
+#define Reg_PF2_CTRL 			(*(unsigned int*)(0xFC00U))
+#define Reg_PF2_CMD	 			(*(unsigned int*)(0xFC01U))
+#define Reg_PF2_ADDR_H 	 		(*(unsigned int*)(0xFC02U))
+#define Reg_PF2_ADDR_L 			(*(unsigned int*)(0xFC03U))
+#define Reg_PF2_WRITE_DATA 		(*(unsigned int*)(0xFC04U))
+#define Reg_PF2_READ_DATA 		(*(unsigned int*)(0xFC05U))
+
+//======================= E-BUS DMA ==========================
+#define Reg_DMA_EXTF_W_ADDR		(*(unsigned int*)(0xF121U))
+#define Reg_DMA_EXTF_W_LEN_L	(*(unsigned int*)(0xF122U))
+#define Reg_DMA_EXTF_W_LEN_H	(*(unsigned int*)(0xF123U))
+#define Reg_DMA_EXTF_R_ADDR 	(*(unsigned int*)(0xF124U))
+#define Reg_DMA_EXTF_R_LEN_L	(*(unsigned int*)(0xF125U))
+#define Reg_DMA_EXTF_R_LEN_H	(*(unsigned int*)(0xF126U))
+#define Reg_EXTF_RW_ADDR_H		(*(unsigned int*)(0xF127U))
+#define Reg_EXTF_RW_ADDR_L		(*(unsigned int*)(0xF128U))
+
+//===================== CIS IF ===============================
+#define Reg_CIS_CTRL 	        (*(unsigned int*)(0xF500U))
+#define Reg_LINE0_ADDR          (*(unsigned int*)(0xF501U))
+#define Reg_LINE1_ADDR          (*(unsigned int*)(0xF502U))
+#define Reg_LINE2_ADDR          (*(unsigned int*)(0xF503U))
+#define Reg_CIS_COL_N           (*(unsigned int*)(0xF504U))
+#define Reg_DLL		            (*(unsigned int*)(0xF505U))
+#define Reg_CIS_VOFFSET		    (*(unsigned int*)(0xF506U))
+#define Reg_CIS_HOFFSET         (*(unsigned int*)(0xF507U))
+#define Reg_CIS_SCALE           (*(unsigned int*)(0xF508U))
+//===================== CIS DMA ==============================
+#define Reg_DMA_CIS_W_ADDR      (*(unsigned int*)(0xF11EU))
+#define Reg_DMA_CIS_W_LEN       (*(unsigned int*)(0xF11FU))
+#define Reg_DMA_CIS_W_CTRL      (*(unsigned int*)(0xF120U))
+
+//===================== SDCard IF ============================
+#define Reg_SD_ARG            	(*(unsigned long*)(0xF000U))
+#define Reg_SD_ARG_L            (*(unsigned int*)(0xF000U))
+#define Reg_SD_ARG_H            (*(unsigned int*)(0xF001U))
+#define Reg_SD_INDEX            (*(unsigned int*)(0xF002U))
+#define Reg_SD_CMD_NIB          (*(unsigned int*)(0xF003U))
+#define Reg_SD_STATUS           (*(unsigned int*)(0xF005U))
+#define Reg_SD_CTRL             (*(unsigned int*)(0xF007U))
+#define Reg_SD_RW_LEN           (*(unsigned int*)(0xF008U))
+#define Reg_SD_RESPONSE_MODE    (*(unsigned int*)(0xF00AU))
+#define Reg_SD_SPEED            (*(unsigned int*)(0xF00BU))
+#define Reg_SD_CRC7             (*(unsigned int*)(0xF00DU))
+#define Reg_SD_CRC16_0          (*(unsigned int*)(0xF00EU))
+#define Reg_SD_CRC16_1          (*(unsigned int*)(0xF00FU))
+#define Reg_SD_CRC16_2          (*(unsigned int*)(0xF010U))
+#define Reg_SD_CRC16_3          (*(unsigned int*)(0xF011U))
+#define Reg_SD_TIMECNT_L        (*(unsigned int*)(0xF012U))
+#define Reg_SD_TIMECNT_H        (*(unsigned int*)(0xF013U))
+#define Reg_SD_REG1             (*(unsigned int*)(0xF01CU))
+#define Reg_SD_REG2             (*(unsigned int*)(0xF01DU))
+#define Reg_SD_REG3             (*(unsigned int*)(0xF01EU))
+#define Reg_SD_REG4             (*(unsigned int*)(0xF01FU))
+//===================== SDCard DMA ===========================
+#define Reg_DMA_SD_W_ADDR       (*(unsigned int*)(0xF100U))
+#define Reg_DMA_SD_W_LEN        (*(unsigned int*)(0xF101U))
+#define Reg_DMA_SD_W_CTRL       (*(unsigned int*)(0xF102U))
+#define Reg_DMA_SD_R_ADDR       (*(unsigned int*)(0xF103U))
+#define Reg_DMA_SD_R_LEN        (*(unsigned int*)(0xF104U))
+#define Reg_DMA_SD_R_CTRL       (*(unsigned int*)(0xF105U))
+
+//===================== NAND Flash IF ========================
+#define Reg_NF_Addr             (*(unsigned long*)(0xF000U))
+#define Reg_NF_Addr_L           (*(unsigned int*)(0xF000U))
+#define Reg_NF_Addr_H           (*(unsigned int*)(0xF001U))
+#define Reg_NF_CMD_NIB          (*(unsigned int*)(0xF003U))
+#define Reg_NF_STATUS           (*(unsigned int*)(0xF005U))
+#define Reg_NF_CMD_BUF          (*(unsigned int*)(0xF006U))
+#define Reg_NF_CTRL             (*(unsigned int*)(0xF007U))
+#define Reg_NF_RW_LEN           (*(unsigned int*)(0xF008U))
+#define Reg_NF_TIMECNT          (*(unsigned long*)(0xF012U))
+#define Reg_NF_TIMECNT_L        (*(unsigned int*)(0xF012U))
+#define Reg_NF_TIMECNT_H        (*(unsigned int*)(0xF013U))
+#define Reg_NF_REG1             (*(unsigned int*)(0xF01CU))
+#define Reg_NF_REG2             (*(unsigned int*)(0xF01DU))
+#define Reg_NF_REG3             (*(unsigned int*)(0xF01EU))
+#define Reg_NF_REG4             (*(unsigned int*)(0xF01FU))
+#define Reg_NF_ECC_ADDR         (*(unsigned int*)(0xF022U))
+#define Reg_NF_ECC_MASK         (*(unsigned int*)(0xF023U))
+#define Reg_NF_ECC_REQ          (*(unsigned int*)(0xF024U))
+#define Reg_NF_CE_CTRL          (*(unsigned int*)(0xF025U))
+//===================== NAND Flash DMA =======================
+#define Reg_DMA_NF_W_ADDR       (*(unsigned int*)(0xF100U))
+#define Reg_DMA_NF_W_LEN        (*(unsigned int*)(0xF101U))
+#define Reg_DMA_NF_W_CTRL       (*(unsigned int*)(0xF102U))
+#define Reg_DMA_NF_R_ADDR       (*(unsigned int*)(0xF103U))
+#define Reg_DMA_NF_R_LEN        (*(unsigned int*)(0xF104U))
+#define Reg_DMA_NF_R_CTRL       (*(unsigned int*)(0xF105U))
+
+//===================== LCDC IF ==============================
+#define Reg_LCDC_CTRL           (*(unsigned int*)(0xFA00U))
+#define Reg_LCDC_COMN           (*(unsigned int*)(0xFA01U))
+#define Reg_LCDC_SEGN           (*(unsigned int*)(0xFA02U))
+#define Reg_LCDC_CLK            (*(unsigned int*)(0xFA03U))
+#define Reg_LCDC_TR             (*(unsigned int*)(0xFA04U))
+#define Reg_LCDC_FM             (*(unsigned int*)(0xFA05U))
+#define Reg_LCDC_PS0            (*(unsigned int*)(0xFA10U))
+#define Reg_LCDC_PS1            (*(unsigned int*)(0xFA11U))
+#define Reg_LCDC_PS2            (*(unsigned int*)(0xFA12U))
+#define Reg_LCDC_PS3            (*(unsigned int*)(0xFA13U))
+#define Reg_LCDC_SUP_DMA        (*(unsigned int*)(0xFA20U))
+#define Reg_LCDC_SUP_CTRL       (*(unsigned int*)(0xFA21U))
+#define Reg_LCDC_SUP_COMN       (*(unsigned int*)(0xFA22U))
+#define Reg_LCDC_SUP_SEGN       (*(unsigned int*)(0xFA23U))
+#define Reg_LCDC_SUP_CLK        (*(unsigned int*)(0xFA24U))
+#define Reg_LCDC_SUP_TR         (*(unsigned int*)(0xFA25U))
+#define Reg_LCDC_SUP_FM         (*(unsigned int*)(0xFA26U))
+//===================== LCDC DMA =============================
+#define Reg_DMA_LCD_R_ADDR      (*(unsigned int*)(0xF11BU))
+#define Reg_DMA_LCD_R_LEN       (*(unsigned int*)(0xF11CU))
+#define Reg_DMA_LCD_R_CTRL      (*(unsigned int*)(0xF11DU))
+
+//===================== DMA1 =================================
+#define Reg_DMA1_EXTF_ADDR_H    (*(unsigned int*)(0xFE27U))
+#define Reg_DMA1_EXTF_ADDR_L    (*(unsigned int*)(0xFE28U))
+#define Reg_DMA1_PRAM_ADDR_H    (*(unsigned int*)(0xFE29U))
+#define Reg_DMA1_PRAM_ADDR_L    (*(unsigned int*)(0xFE2AU))
+#define Reg_DMA1_LEN            (*(unsigned int*)(0xFE2BU))
+#define Reg_DMA1_CTRL           (*(unsigned int*)(0xFE2CU))
+//===================== DMA2 =================================
+#define Reg_DMA2_WRAM_ADDR      (*(unsigned int*)(0xF132U))
+#define Reg_DMA2_LEN            (*(unsigned int*)(0xF133U))
+#define Reg_DMA2_CTRL           (*(unsigned int*)(0xF134U))
+#define Reg_DMA2_PRAM_ADDR      (*(unsigned int*)(0xF135U))
+
+#endif
