@@ -222,8 +222,10 @@
 //===========================================
 	//YQ 2013-5-10 Start
 	int* SongRam;
-	int SongRam1[0x600];
-	int SongRam2[0x600];
+	int SongRam1[0x400];
+	int SongRam2[0x400];
+	int SongRam3[0x400];
+	int SongRam4[0x400];
 
 	int g_SongDataAddr;
 	//YQ 2013-5-10 End

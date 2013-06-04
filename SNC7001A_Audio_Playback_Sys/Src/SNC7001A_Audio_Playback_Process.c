@@ -40,7 +40,6 @@
 #include "SNC7001A_Algorithm_Define.h"
 
 extern int g_SongDataAddr;
-extern int SongRam1[0x600];
 
 void Audio_Decode_Process(void)
 {

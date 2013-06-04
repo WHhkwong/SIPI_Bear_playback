@@ -6,8 +6,6 @@
 #include "../../SNC7001A_Audio_Playback_Sys/Include/SNC7001A_Audio_Playback_Usage.h"
 #include "../../SNC7001A_Audio_Playback_Sys/Include/SNC7001A_Algorithm_Define.h"
 
-#define BUF_SIZE	0x600
-
 extern u16 g_uiSPI_RX_F;
 extern u16 g_uiSPI_RX_0;
 extern u16 g_uiSPI_RX_1;
@@ -19,8 +17,10 @@ extern u16 g_uiFUNC_PROC;
 extern void WaveMarkTrig(void);
 
 extern int* SongRam;
-extern int SongRam1[0x600];
-extern int SongRam2[0x600];
+extern int SongRam1[0x400];
+extern int SongRam2[0x400];
+extern int SongRam3[0x400];
+extern int SongRam4[0x400];
 
 void SNAP01EN(void)
 {
@@ -49,7 +49,7 @@ void SPI_RX_FUNC_1(void)
 	{
 		SD_DAC_Turn_Off();
 		PlayFore_Stop();
-		memset(SongRam, 0, 1536);
+		memset(SongRam, 0, 1016);
 		g_uiSPI_BUF_INDEX = 0;
 
 		g_uiFUNC_SELECT = 0;
@@ -69,7 +69,13 @@ void SPI_RX_FUNC_1(void)
 	}
 	else if( g_uiFUNC_PROC == 2 )
 	{
-		g_uiFUNC_PROC = 3;
+		if(PlayForeEnd_Check()==1)
+		{
+			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
+			g_uiFUNC_PROC = 0;
+//			g_uiFUNC_SELECT = 0;
+			F_TestRamPlaySong(SongRam2);
+		}
 	}
 	else if( g_uiFUNC_PROC == 3 )
 	{
@@ -78,7 +84,17 @@ void SPI_RX_FUNC_1(void)
 			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
 			g_uiFUNC_PROC = 0;
 //			g_uiFUNC_SELECT = 0;
-			F_TestRamPlaySong(SongRam2);
+			F_TestRamPlaySong(SongRam3);
+		}
+	}
+	else if( g_uiFUNC_PROC == 4 )
+	{
+		if(PlayForeEnd_Check()==1)
+		{
+			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
+			g_uiFUNC_PROC = 0;
+//			g_uiFUNC_SELECT = 0;
+			F_TestRamPlaySong(SongRam4);
 		}
 	}
 }
