@@ -28,6 +28,7 @@ void sys_main(void)
 	SPI_Set_Interface_Mode(SPI_Mode0);	     // SPI Mode 0
 	SPI_Set_Access_Mode(Read_Mode, SPI_1X);
 	_setSR(SFR_SPITRANSFER, 16);
+	_setSR(SFR_INTCR, 0x0400);
 //	SPI_Disable(); 
 SPI_Enable(SPI_Slave); 
 	Enable_SPI_INT();
@@ -38,8 +39,8 @@ SPI_Enable(SPI_Slave);
 //	_setSR(SFR_INTEC, 0x0001);	// rising edge
 //	Enable_P00_INT();
 
-	_setSR(SFR_P3En, 0x0001);
-	_setSR(SFR_P3M,  0x0001);
+	_setSR(SFR_P3En, 0x0005);
+	_setSR(SFR_P3M,  0x0005);
 	_setSR(SFR_P3PH, 0x0000);
 
 	AudioPlay_Enable(); //Audio Algorithm Initial

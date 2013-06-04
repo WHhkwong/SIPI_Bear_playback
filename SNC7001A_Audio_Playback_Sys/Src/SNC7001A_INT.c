@@ -151,6 +151,7 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 1;
+				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
 			}
 		}
 		else
@@ -160,6 +161,8 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 2 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 2;
+				g_uiSPI_BUF_INDEX = 0;
+				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
 			}
 		}
 	}

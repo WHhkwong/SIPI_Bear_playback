@@ -70,7 +70,6 @@ void SPI_RX_FUNC_1(void)
 	else if( g_uiFUNC_PROC == 2 )
 	{
 		g_uiFUNC_PROC = 3;
-		g_uiSPI_BUF_INDEX = 0;
 	}
 	else if( g_uiFUNC_PROC == 3 )
 	{
