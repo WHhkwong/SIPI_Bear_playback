@@ -21,6 +21,7 @@ void sys_main(void)
 
     Reset_WDT();
 
+	SF_Enable();
 	//=====================================================
 	// SPI Slave mode Initial
 	//=====================================================
@@ -29,24 +30,36 @@ void sys_main(void)
 	SPI_Set_Access_Mode(Read_Mode, SPI_1X);
 	_setSR(SFR_SPITRANSFER, 16);
 	_setSR(SFR_INTCR, 0x0400);
-//	SPI_Disable(); 
-SPI_Enable(SPI_Slave); 
+#ifdef ENABLE_PIN_WAKEUP
+	SPI_Disable(); 
+#else
+	SPI_Enable(SPI_Slave); 
+#endif
 	Enable_SPI_INT();
 
 	_setSR(SFR_P0En, 0x0001);
 	_setSR(SFR_P0M,  0x0000);
 	_setSR(SFR_P0PH, 0x0007);
-//	_setSR(SFR_INTEC, 0x0001);	// rising edge
-//	Enable_P00_INT();
+#ifdef ENABLE_PIN_WAKEUP
+	_setSR(SFR_INTEC, 0x0001);	// rising edge
+	Enable_P00_INT();
+#endif
 
-	_setSR(SFR_P3En, 0x0005);
-	_setSR(SFR_P3M,  0x0005);
+	_setSR(SFR_P3En, 0x0015);
+	_setSR(SFR_P3M,  0x0015);
 	_setSR(SFR_P3PH, 0x0000);
+
+	//=====================================================
+	// Wake up source selection with P0
+	//===================================================== 
+	P0_WakeUp_Setting(0x0001);	//P0.0 is wake up source
 
 	AudioPlay_Enable(); //Audio Algorithm Initial
 
+	Gie();
+
     //===================USB Power Down Start=============
-    //   USB_PowerDown();
+    //USB_PowerDown();
 	//===================USB Power Down End=============
    
     MainRoutine();

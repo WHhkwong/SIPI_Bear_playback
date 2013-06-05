@@ -226,6 +226,8 @@
 	int SongRam2[0x400];
 	int SongRam3[0x400];
 	int SongRam4[0x400];
+	int SongRam5[0x400];
+	int SongRam6[0x400];
 
 	int g_SongDataAddr;
 	//YQ 2013-5-10 End

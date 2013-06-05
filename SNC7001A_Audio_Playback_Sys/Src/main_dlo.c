@@ -5,6 +5,7 @@
 #include "../../H/Peripheral/SNC7001A_SD_DAC.h"
 #include "../../SNC7001A_Audio_Playback_Sys/Include/SNC7001A_Audio_Playback_Usage.h"
 #include "../../SNC7001A_Audio_Playback_Sys/Include/SNC7001A_Algorithm_Define.h"
+#include "../../H/Peripheral/SNC7001A_SPI.h"
 
 extern u16 g_uiSPI_RX_F;
 extern u16 g_uiSPI_RX_0;
@@ -27,6 +28,13 @@ void SNAP01EN(void)
 	_IObitSET(SFR_P1En,6) ; 
 	_IObitSET(SFR_P1M,6) ;
 	_IObitSET(SFR_P1,6) ;
+}
+
+void SNAP01DIS(void)
+{
+	_IObitSET(SFR_P1En,6); 
+	_IObitSET(SFR_P1M, 6);
+	_IObitCLR(SFR_P1,  6);//P1.6=0
 }
 
 void F_TestRamPlaySong(int* Song)
@@ -101,15 +109,18 @@ void SPI_RX_FUNC_1(void)
 
 void MainRoutine(void)
 {
-#if 1
 		g_uiFUNC_PROC = 0;
-
-		g_uiFUNC_INI_SELECT = 1;
-
-		g_uiFUNC_SELECT = 1;
 
 		g_uiSPI_BUF_INDEX = 0;
 
+#ifdef ENABLE_PIN_WAKEUP
+		g_uiFUNC_INI_SELECT = 0;
+
+		g_uiFUNC_SELECT = 0;
+#else
+		g_uiFUNC_INI_SELECT = 1;
+
+		g_uiFUNC_SELECT = 1;
 #endif
 //	F_TestRamPlaySong();	//YQ 2013-5-10
    while(1)
@@ -119,7 +130,15 @@ void MainRoutine(void)
 	  if(g_uiFUNC_SELECT == 0x0001)
 	  {
          SPI_RX_FUNC_1();
-      } 
+      }
+#ifdef ENABLE_PIN_WAKEUP
+	  else if(g_uiFUNC_SELECT == 0x0000)
+	  {
+	  	SNAP01DIS();
+//		Switch_Main_Clk_Freq(HIGH_48M, SLOW_12M);
+		Power_Down(HIGH_48M);
+	  }
+#endif
 
 	  Audio_Decode_Process();
 
