@@ -58,7 +58,7 @@ void __interrupt [0x1C] P00_ISR(void)
 	_setSR(SFR_INTEC, _getSR(SFR_INTEC) ^ 0x0001);	// reverse edge
 	if(_getSR(SFR_P0) & 0x0001)	// high
 	{
-		_setSR(SFR_P3, _getSR(SFR_P3)^0x0010);
+//		_setSR(SFR_P3, _getSR(SFR_P3)^0x0010);
 
 		g_uiFUNC_PROC = 0;
 
@@ -72,7 +72,7 @@ void __interrupt [0x1C] P00_ISR(void)
 	}
 	else	// lo
 	{
-		_setSR(SFR_P3, _getSR(SFR_P3)^0x0010);
+//		_setSR(SFR_P3, _getSR(SFR_P3)^0x0010);
 
 //		g_uiFUNC_PROC = 0;
 
