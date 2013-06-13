@@ -14,6 +14,7 @@ extern u16 g_uiSPI_BUF_INDEX;
 extern u16 g_uiFUNC_SELECT;
 extern u16 g_uiFUNC_INI_SELECT;
 extern u16 g_uiFUNC_PROC;
+u16 g_uiFUNC_PLAY;
 
 extern void WaveMarkTrig(void);
 
@@ -63,68 +64,64 @@ void SPI_RX_FUNC_1(void)
 		memset(SongRam, 0, 1016);
 		g_uiSPI_BUF_INDEX = 0;
 
+		g_uiFUNC_PROC = 0;
+		g_uiFUNC_PLAY = 0;
+
 		g_uiFUNC_SELECT = 0;
 		g_uiFUNC_INI_SELECT = 0;
 	}
 
-	if( g_uiFUNC_PROC == 1 )
+	if( ( g_uiFUNC_PLAY == 0 || g_uiFUNC_PLAY == 6) && g_uiFUNC_PROC >= 1 )
 	{
-//		SD_DAC_Turn_On(SR_16K);
-//		SD_DAC_Volume_Control(0x10);
 		if(PlayForeEnd_Check()==1)
 		{
 			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
-			g_uiFUNC_PROC = 0;
+			g_uiFUNC_PLAY = 1;
 			F_TestRamPlaySong(SongRam1);
 		}
 	}
-	else if( g_uiFUNC_PROC == 2 )
+	else if( g_uiFUNC_PLAY == 1 && g_uiFUNC_PROC >= 2 )
 	{
 		if(PlayForeEnd_Check()==1)
 		{
 			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
-			g_uiFUNC_PROC = 0;
-//			g_uiFUNC_SELECT = 0;
+			g_uiFUNC_PLAY = 2;
 			F_TestRamPlaySong(SongRam2);
 		}
 	}
-	else if( g_uiFUNC_PROC == 3 )
+	else if( g_uiFUNC_PLAY == 2 && g_uiFUNC_PROC >= 3 )
 	{
 		if(PlayForeEnd_Check()==1)
 		{
 			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
-			g_uiFUNC_PROC = 0;
-//			g_uiFUNC_SELECT = 0;
+			g_uiFUNC_PLAY = 3;
 			F_TestRamPlaySong(SongRam3);
 		}
 	}
-	else if( g_uiFUNC_PROC == 4 )
+	else if( g_uiFUNC_PLAY == 3 && g_uiFUNC_PROC >= 4 )
 	{
 		if(PlayForeEnd_Check()==1)
 		{
 			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
-			g_uiFUNC_PROC = 0;
-//			g_uiFUNC_SELECT = 0;
+			g_uiFUNC_PLAY = 4;
 			F_TestRamPlaySong(SongRam4);
 		}
 	}
-	else if( g_uiFUNC_PROC == 5 )
+	else if( g_uiFUNC_PLAY == 4 && g_uiFUNC_PROC >= 5 )
 	{
 		if(PlayForeEnd_Check()==1)
 		{
 			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
-			g_uiFUNC_PROC = 0;
-//			g_uiFUNC_SELECT = 0;
+			g_uiFUNC_PLAY = 5;
 			F_TestRamPlaySong(SongRam5);
 		}
 	}
-	else if( g_uiFUNC_PROC == 6 )
+	else if( g_uiFUNC_PLAY == 5 && g_uiFUNC_PROC >= 6 )
 	{
 		if(PlayForeEnd_Check()==1)
 		{
 			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
-			g_uiFUNC_PROC = 0;
-//			g_uiFUNC_SELECT = 0;
+			g_uiFUNC_PLAY = 6;
 			F_TestRamPlaySong(SongRam6);
 		}
 	}
@@ -133,6 +130,8 @@ void SPI_RX_FUNC_1(void)
 void MainRoutine(void)
 {
 		g_uiFUNC_PROC = 0;
+
+		g_uiFUNC_PLAY = 0;
 
 		g_uiSPI_BUF_INDEX = 0;
 
