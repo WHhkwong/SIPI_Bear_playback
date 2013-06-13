@@ -6,7 +6,9 @@
 #include "../../H/System/SNC7001A_System.h"
 #include "../../H/Peripheral/SNC7001A_SPI.h"
 
-#define BUF_SIZE	1016//1516//0x600
+#ifdef AUDIO_BUF_1KW
+
+#define BUF_SIZE	1016
 
 extern int SongRam1[0x400];
 extern int SongRam2[0x400];
@@ -14,6 +16,23 @@ extern int SongRam3[0x400];
 extern int SongRam4[0x400];
 extern int SongRam5[0x400];
 extern int SongRam6[0x400];
+extern int SongRam7[0x400];
+extern int SongRam8[0x400];
+extern int SongRam9[0x400];
+
+#else
+
+#define BUF_SIZE  1516
+
+extern int SongRam1[0x600];
+extern int SongRam2[0x600];
+extern int SongRam3[0x600];
+extern int SongRam4[0x600];
+extern int SongRam5[0x600];
+extern int SongRam6[0x600];
+
+#endif
+
 
 u16 g_uiSPI_RX_F;
 u16 g_uiSPI_RX_0;
@@ -169,7 +188,6 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 2 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 2;
-//				g_uiSPI_BUF_INDEX = 0;
 				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
 			}
 		}
@@ -180,7 +198,6 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 3 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 3;
-//				g_uiSPI_BUF_INDEX = 0;
 				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
 			}
 		}
@@ -191,7 +208,6 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 4 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 4;
-//				g_uiSPI_BUF_INDEX = 0;
 				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
 			}
 		}
@@ -202,7 +218,6 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 5 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 5;
-//				g_uiSPI_BUF_INDEX = 0;
 				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
 			}
 		}
@@ -213,10 +228,45 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 6 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 6;
+#ifndef AUDIO_BUF_1KW
+				g_uiSPI_BUF_INDEX = 0;
+#endif
+				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+			}
+		}
+#ifdef AUDIO_BUF_1KW
+		else if( g_uiSPI_BUF_INDEX < 7 * BUF_SIZE )
+		{
+			SongRam7[ g_uiSPI_BUF_INDEX - 6 * BUF_SIZE ] = g_uiSPI_RX_WORD;
+			g_uiSPI_BUF_INDEX++;
+			if( g_uiSPI_BUF_INDEX == 7 * BUF_SIZE)
+			{
+				g_uiFUNC_PROC = 7;
+				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+			}
+		}
+		else if( g_uiSPI_BUF_INDEX < 8 * BUF_SIZE )
+		{
+			SongRam8[ g_uiSPI_BUF_INDEX - 7 * BUF_SIZE ] = g_uiSPI_RX_WORD;
+			g_uiSPI_BUF_INDEX++;
+			if( g_uiSPI_BUF_INDEX == 8 * BUF_SIZE)
+			{
+				g_uiFUNC_PROC = 8;
+				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+			}
+		}
+		else if( g_uiSPI_BUF_INDEX < 9 * BUF_SIZE )
+		{
+			SongRam9[ g_uiSPI_BUF_INDEX - 8 * BUF_SIZE ] = g_uiSPI_RX_WORD;
+			g_uiSPI_BUF_INDEX++;
+			if( g_uiSPI_BUF_INDEX == 9 * BUF_SIZE)
+			{
+				g_uiFUNC_PROC = 9;
 				g_uiSPI_BUF_INDEX = 0;
 				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
 			}
 		}
+#endif
 	}
 	else
 	{

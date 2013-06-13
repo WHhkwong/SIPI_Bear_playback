@@ -222,12 +222,24 @@
 //===========================================
 	//YQ 2013-5-10 Start
 	int* SongRam;
+#ifdef AUDIO_BUF_1KW
 	int SongRam1[0x400];
 	int SongRam2[0x400];
 	int SongRam3[0x400];
 	int SongRam4[0x400];
 	int SongRam5[0x400];
 	int SongRam6[0x400];
+	int SongRam7[0x400];
+	int SongRam8[0x400];
+	int SongRam9[0x400];
+#else
+	int SongRam1[0x600];
+	int SongRam2[0x600];
+	int SongRam3[0x600];
+	int SongRam4[0x600];
+	int SongRam5[0x600];
+	int SongRam6[0x600];
+#endif
 
 	int g_SongDataAddr;
 	//YQ 2013-5-10 End
