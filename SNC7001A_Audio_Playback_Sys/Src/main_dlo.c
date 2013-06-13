@@ -22,6 +22,8 @@ extern int SongRam1[0x400];
 extern int SongRam2[0x400];
 extern int SongRam3[0x400];
 extern int SongRam4[0x400];
+extern int SongRam5[0x400];
+extern int SongRam6[0x400];
 
 void SNAP01EN(void)
 {
@@ -57,6 +59,7 @@ void SPI_RX_FUNC_1(void)
 	{
 		SD_DAC_Turn_Off();
 		PlayFore_Stop();
+		_setSR(SFR_P3, _getSR(SFR_P3)&0xFFEF);
 		memset(SongRam, 0, 1016);
 		g_uiSPI_BUF_INDEX = 0;
 
@@ -105,6 +108,26 @@ void SPI_RX_FUNC_1(void)
 			F_TestRamPlaySong(SongRam4);
 		}
 	}
+	else if( g_uiFUNC_PROC == 5 )
+	{
+		if(PlayForeEnd_Check()==1)
+		{
+			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
+			g_uiFUNC_PROC = 0;
+//			g_uiFUNC_SELECT = 0;
+			F_TestRamPlaySong(SongRam5);
+		}
+	}
+	else if( g_uiFUNC_PROC == 6 )
+	{
+		if(PlayForeEnd_Check()==1)
+		{
+			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
+			g_uiFUNC_PROC = 0;
+//			g_uiFUNC_SELECT = 0;
+			F_TestRamPlaySong(SongRam6);
+		}
+	}
 }
 
 void MainRoutine(void)
@@ -136,7 +159,7 @@ void MainRoutine(void)
 	  {
 	  	SNAP01DIS();
 //		Switch_Main_Clk_Freq(HIGH_48M, SLOW_12M);
-		Power_Down(HIGH_48M);
+//		Power_Down(HIGH_48M);
 	  }
 #endif
 

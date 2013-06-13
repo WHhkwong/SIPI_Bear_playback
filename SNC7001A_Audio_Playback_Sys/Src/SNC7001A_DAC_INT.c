@@ -48,7 +48,7 @@ void __interrupt [0x34] DA_ISR(void)
 
 	gOutAmp = gOutAmp / 8;
 
-	if(gOutAmp >= 512 || gOutAmp <= -512)
+	if(gOutAmp >= 1024 || gOutAmp <= -1024)
 	{
 		_setSR(SFR_P3, _getSR(SFR_P3)|0x0010);
 	}

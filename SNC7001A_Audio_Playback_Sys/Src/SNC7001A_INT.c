@@ -12,6 +12,8 @@ extern int SongRam1[0x400];
 extern int SongRam2[0x400];
 extern int SongRam3[0x400];
 extern int SongRam4[0x400];
+extern int SongRam5[0x400];
+extern int SongRam6[0x400];
 
 u16 g_uiSPI_RX_F;
 u16 g_uiSPI_RX_0;
@@ -189,6 +191,28 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 4 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 4;
+//				g_uiSPI_BUF_INDEX = 0;
+				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+			}
+		}
+		else if( g_uiSPI_BUF_INDEX < 5 * BUF_SIZE )
+		{
+			SongRam5[ g_uiSPI_BUF_INDEX - 4 * BUF_SIZE ] = g_uiSPI_RX_WORD;
+			g_uiSPI_BUF_INDEX++;
+			if( g_uiSPI_BUF_INDEX == 5 * BUF_SIZE)
+			{
+				g_uiFUNC_PROC = 5;
+//				g_uiSPI_BUF_INDEX = 0;
+				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+			}
+		}
+		else if( g_uiSPI_BUF_INDEX < 6 * BUF_SIZE )
+		{
+			SongRam6[ g_uiSPI_BUF_INDEX - 5 * BUF_SIZE ] = g_uiSPI_RX_WORD;
+			g_uiSPI_BUF_INDEX++;
+			if( g_uiSPI_BUF_INDEX == 6 * BUF_SIZE)
+			{
+				g_uiFUNC_PROC = 6;
 				g_uiSPI_BUF_INDEX = 0;
 				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
 			}
