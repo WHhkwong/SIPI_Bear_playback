@@ -5,6 +5,7 @@
 #include "../../H/SNC7001A_Common_H/SNC7001A_Common_def.h"
 #include "../../H/System/SNC7001A_System.h"
 #include "../../H/Peripheral/SNC7001A_SPI.h"
+#include "hw_setup.h"
 
 #ifdef AUDIO_BUF_1KW
 
@@ -42,14 +43,8 @@ u16 g_uiSPI_BUF_INDEX;
 u16 g_uiFUNC_SELECT;
 u16 g_uiFUNC_INI_SELECT;
 u16 g_uiFUNC_PROC;
-
-//=========================================
-//
-//=========================================
-void __interrupt [0x10] Reserved_0x10(void)
-{
-
-}
+u16 g_uiFUNC_PLAY;
+u16 g_uiKEY_CNT;
 
 //=========================================
 //
@@ -67,6 +62,23 @@ void __interrupt [0x18] T0_ISR(void)
 {
 	//_setSR(SFR_INTCR, SET_BIT7);
 	Clr_T0_Req();
+
+	g_uiKEY_CNT++;
+	DEBUG_PIN2_TOGGLE;
+
+	if(g_uiKEY_CNT == 3)
+	{
+		Disable_SPI_INT();
+		Disable_P00_INT();
+		Disable_P01_INT();
+
+		CC2540_RESET_PIN_LO;
+
+		WDT_0P25_Sec();
+
+		while(1)
+		{};			// wait for watchdog reset
+	}
 }
 
 //=========================================
@@ -76,30 +88,37 @@ void __interrupt [0x1C] P00_ISR(void)
 {
 	//_setSR(SFR_INTCR, SET_BIT6);
 	Clr_P00_Req();
-	_setSR(SFR_INTEC, _getSR(SFR_INTEC) ^ 0x0001);	// reverse edge
-	if(_getSR(SFR_P0) & 0x0001)	// high
+
+	if(!KEY_PIN_EDGE_IS_HI && !KEY_PIN_IS_HI)	// lo
 	{
-//		_setSR(SFR_P3, _getSR(SFR_P3)^0x0010);
+		KEY_PIN_EDGE_TOGGLE;
 
-		g_uiFUNC_PROC = 0;
+		_setSR(SFR_T0CNT, T0_COUNT_VALUE);
+		T0_ENABLE;
+		Enable_T0_INT();
 
-		g_uiFUNC_INI_SELECT = 1;
-
-		g_uiFUNC_SELECT = 1;
-
-		g_uiSPI_BUF_INDEX = 0;
-
-		SPI_Enable(SPI_Slave); 
+		g_uiKEY_CNT = 0;
+		if(!g_uiFUNC_SELECT)
+		{
+			g_uiFUNC_SELECT = 1;
+			g_uiFUNC_INI_SELECT = 3;
+		}
 	}
-	else	// lo
+	else if(KEY_PIN_EDGE_IS_HI && KEY_PIN_IS_HI)	// hi
 	{
-//		_setSR(SFR_P3, _getSR(SFR_P3)^0x0010);
+		KEY_PIN_EDGE_TOGGLE;
 
-//		g_uiFUNC_PROC = 0;
+		if(g_uiKEY_CNT <= 2)
+		{
+			if(g_uiFUNC_INI_SELECT == 3)
+			{
+				g_uiFUNC_SELECT = 0;
+				g_uiFUNC_INI_SELECT = 0;
+			}
+		}
 
-		g_uiFUNC_INI_SELECT = 2;
-
-		SPI_Disable(); 
+		Disable_T0_INT();
+		T0_DISABLE;
 	}
 }
 
@@ -119,6 +138,39 @@ void __interrupt [0x24] P01_ISR(void)
 {
 	//_setSR(SFR_INTCR, SET_BIT4);
 	Clr_P01_Req();
+
+	if(WAKEUP_PIN_EDGE_IS_HI && WAKEUP_PIN_IS_HI)	// high
+	{
+		WAKEUP_PIN_EDGE_TOGGLE;	// reverse edge
+
+//		DEBUG_PIN2_TOGGLE;
+
+		g_uiFUNC_PROC = 0;
+
+		g_uiFUNC_INI_SELECT = 1;
+
+		g_uiFUNC_SELECT = 1;
+
+		g_uiSPI_BUF_INDEX = 0;
+
+		Clr_SPI_Req();
+
+		Enable_SPI_INT();
+
+	}
+	else if(!WAKEUP_PIN_EDGE_IS_HI && !WAKEUP_PIN_IS_HI) // lo
+	{
+		WAKEUP_PIN_EDGE_TOGGLE;	// reverse edge
+
+//		DEBUG_PIN2_TOGGLE;
+
+//		g_uiFUNC_PROC = 0;
+
+		g_uiFUNC_INI_SELECT = 2;
+
+		Disable_SPI_INT();
+
+	}
 }
 
 //=========================================
@@ -178,7 +230,11 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 1;
-				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+				if(g_uiFUNC_PLAY == 2)
+				{
+					BUFFER_CTRL_PIN_LO;
+				}
+				DEBUG_PIN1_TOGGLE;
 			}
 		}
 		else if( g_uiSPI_BUF_INDEX < 2 * BUF_SIZE )
@@ -188,7 +244,11 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 2 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 2;
-				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+				if(g_uiFUNC_PLAY == 3)
+				{
+					BUFFER_CTRL_PIN_LO;
+				}
+				DEBUG_PIN1_TOGGLE;
 			}
 		}
 		else if( g_uiSPI_BUF_INDEX < 3 * BUF_SIZE )
@@ -198,7 +258,11 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 3 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 3;
-				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+				if(g_uiFUNC_PLAY == 4)
+				{
+					BUFFER_CTRL_PIN_LO;
+				}
+				DEBUG_PIN1_TOGGLE;
 			}
 		}
 		else if( g_uiSPI_BUF_INDEX < 4 * BUF_SIZE )
@@ -208,7 +272,11 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 4 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 4;
-				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+				if(g_uiFUNC_PLAY == 5)
+				{
+					BUFFER_CTRL_PIN_LO;
+				}
+				DEBUG_PIN1_TOGGLE;
 			}
 		}
 		else if( g_uiSPI_BUF_INDEX < 5 * BUF_SIZE )
@@ -218,7 +286,11 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 5 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 5;
-				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+				if(g_uiFUNC_PLAY == 6)
+				{
+					BUFFER_CTRL_PIN_LO;
+				}
+				DEBUG_PIN1_TOGGLE;
 			}
 		}
 		else if( g_uiSPI_BUF_INDEX < 6 * BUF_SIZE )
@@ -228,10 +300,14 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 6 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 6;
+				if(g_uiFUNC_PLAY == 1)
+				{
+					BUFFER_CTRL_PIN_LO;
+				}
 #ifndef AUDIO_BUF_1KW
 				g_uiSPI_BUF_INDEX = 0;
 #endif
-				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+				DEBUG_PIN1_TOGGLE;
 			}
 		}
 #ifdef AUDIO_BUF_1KW
@@ -242,7 +318,7 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 7 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 7;
-				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+				DEBUG_PIN1_TOGGLE;
 			}
 		}
 		else if( g_uiSPI_BUF_INDEX < 8 * BUF_SIZE )
@@ -252,7 +328,7 @@ void __interrupt [0x38] SPI_ISR(void)
 			if( g_uiSPI_BUF_INDEX == 8 * BUF_SIZE)
 			{
 				g_uiFUNC_PROC = 8;
-				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+				DEBUG_PIN1_TOGGLE;
 			}
 		}
 		else if( g_uiSPI_BUF_INDEX < 9 * BUF_SIZE )
@@ -263,7 +339,7 @@ void __interrupt [0x38] SPI_ISR(void)
 			{
 				g_uiFUNC_PROC = 9;
 				g_uiSPI_BUF_INDEX = 0;
-				_setSR(SFR_P3, _getSR(SFR_P3)^0x0004);
+				DEBUG_PIN1_TOGGLE;
 			}
 		}
 #endif

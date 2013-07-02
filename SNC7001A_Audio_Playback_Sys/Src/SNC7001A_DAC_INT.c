@@ -6,6 +6,7 @@
 #include "../../H/System/SNC7001A_System.h"
 #include "SNC7001A_Algorithm_Define.h"
 #include "../../SNC7001A_Audio_Playback_Sys/Include/SNC7001A_Audio_Playback_Usage.h"
+#include "hw_setup.h"
 
 extern short	 gOutBuf[];
 extern short     POutIdx_asm;
@@ -16,7 +17,7 @@ void __interrupt [0x34] DA_ISR(void)
 
 	Clr_SD_DAC_Req();
 
-//	_setSR(SFR_P3, _getSR(SFR_P3)^0x0010);
+//	DEBUG_PIN2_TOGGLE;
    
     #ifdef WaveMark
 	//=======================WaveMark Usage====================
@@ -42,7 +43,6 @@ void __interrupt [0x34] DA_ISR(void)
 	#endif
    
 
-#if 1
 	gOutAmp = gOutBuf[POutIdx_asm] + gOutBuf[POutIdx_asm + 1] + gOutBuf[POutIdx_asm + 2] + gOutBuf[POutIdx_asm + 3] +
 				gOutBuf[POutIdx_asm + 4] + gOutBuf[POutIdx_asm + 5] + gOutBuf[POutIdx_asm + 6] + gOutBuf[POutIdx_asm + 7];
 
@@ -50,13 +50,13 @@ void __interrupt [0x34] DA_ISR(void)
 
 	if(gOutAmp >= 1024 || gOutAmp <= -1024)
 	{
-		_setSR(SFR_P3, _getSR(SFR_P3)|0x0010);
+		DEBUG_PIN2_HI;
 	}
 	else
 	{
-		_setSR(SFR_P3, _getSR(SFR_P3)&0xFFEF);
+		DEBUG_PIN2_LO;
 	}
-#endif
+
    __asm
    {
 

@@ -96,7 +96,7 @@ AdditionalLibraryPath=.\Lib
 AdditionalLinkedLibraries=
 
 ;Compiler category
-CompilerDefinedSymbols=ENABLE_PIN_WAKEUP, AUDIO_BUF_1KW
+CompilerDefinedSymbols=ENABLE_PIN_WAKEUP
 CompilerUndefinedSymbols=
 CompilerExtraOptions=
 IsWarnMoreMessages=1
@@ -139,7 +139,7 @@ CS2_Type=
 CS2_Size=
 NandFlash_Type=
 SDCard_Type=
-IsS9KEModified=1
+IsS9KEModified=0
 IsPeephole=1
 IsPostLink=0
 IsShortJump=0
@@ -169,7 +169,7 @@ Folder1-Name=Header
 Folder1-Extension=h
 
 [ProjectFile]
-Count=16
+Count=18
 File0=.\Src\SNC7001A_Audio_Algorithm_RAM_Assign.c
 File1=..\SNC7001A_Audio_Algorithm_RAM_Assignment\ALGRAM_Define.h
 File2=.\Include\SNC7001A_Algorithm_Define.h
@@ -181,13 +181,13 @@ File7=.\Lib\Peripheral\SNC7001A_SPI.lib
 File8=.\Lib\System\SNC7001A_System.lib
 File9=..\H\SNC7001A_Common_H\SNC7001A_Common_def.h
 File10=.\Src\SNC7001A_Audio_Playback_Process.c
-File11=.\Src\main_sys.c
+File11=.\Include\SNC7001A_Audio_Playback_Process.h
 File12=.\Src\SNC7001A_DAC_INT.c
-File13=.\Include\SNC7001A_Audio_Playback_Process.h
+File13=.\Src\main_sys.c
 File14=.\Src\SNC7001A_INT.c
-File15=.\Src\main_dlo.c
-File16=.\Lib\Peripheral\SNC7001A_USB_Bulk.lib
-File17=.\Lib\Peripheral\SNC7001A_USB_HID.lib
+File15=.\Include\hw_setup.h
+File16=.\Src\main_dlo.c
+File17=.\Src\hw_setup.c
 File18=.\Include\SNC7001A_Algorithm_Define.h
 File19=..\..\..\Lib\Peripheral\SNC7001A_Serial_Flash.lib
 File20=.\Src\SNC7001A_Audio_Playback_Process.c

@@ -6,6 +6,7 @@
 #include "../../SNC7001A_Audio_Playback_Sys/Include/SNC7001A_Audio_Playback_Usage.h"
 #include "../../SNC7001A_Audio_Playback_Sys/Include/SNC7001A_Algorithm_Define.h"
 #include "../../H/Peripheral/SNC7001A_SPI.h"
+#include "hw_setup.h"
 
 extern u16 g_uiSPI_RX_F;
 extern u16 g_uiSPI_RX_0;
@@ -14,7 +15,7 @@ extern u16 g_uiSPI_BUF_INDEX;
 extern u16 g_uiFUNC_SELECT;
 extern u16 g_uiFUNC_INI_SELECT;
 extern u16 g_uiFUNC_PROC;
-u16 g_uiFUNC_PLAY;
+extern u16 g_uiFUNC_PLAY;
 
 extern void WaveMarkTrig(void);
 
@@ -77,7 +78,7 @@ void SPI_RX_FUNC_1(void)
 	{
 		SD_DAC_Turn_Off();
 		PlayFore_Stop();
-		_setSR(SFR_P3, _getSR(SFR_P3)&0xFFEF);
+		DEBUG_PIN2_LO;
 #ifdef AUDIO_BUF_1KW
 		memset(SongRam, 0, 1016);
 #else
@@ -94,58 +95,82 @@ void SPI_RX_FUNC_1(void)
 #ifdef AUDIO_BUF_1KW
 	if( ( g_uiFUNC_PLAY == 0 && g_uiFUNC_PROC >= 1 ) || ( g_uiFUNC_PLAY == 9 && g_uiFUNC_PROC >= 1 && g_uiFUNC_PROC != 9 ) )
 #else
-	if( ( g_uiFUNC_PLAY == 0 && g_uiFUNC_PROC >= 1 ) || ( g_uiFUNC_PLAY == 6 && g_uiFUNC_PROC >= 1 && g_uiFUNC_PROC != 6 ) )
+	if( ( g_uiFUNC_PLAY == 0 && g_uiFUNC_PROC >= 1 ) || ( g_uiFUNC_PLAY == 6 /*&& g_uiFUNC_PROC >= 1*/ && g_uiFUNC_PROC != 6 ) )
 #endif
 	{
 		if(PlayForeEnd_Check()==1)
 		{
-			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
+			DEBUG_PIN0_TOGGLE;
 			g_uiFUNC_PLAY = 1;
+			if(g_uiFUNC_PROC != 5 && g_uiFUNC_PROC != 6)
+			{
+				BUFFER_CTRL_PIN_HI;
+			}
 			F_TestRamPlaySong(SongRam1);
 		}
 	}
-	else if( g_uiFUNC_PLAY == 1 && g_uiFUNC_PROC >= 2 )
+	else if( g_uiFUNC_PLAY == 1 /*&& g_uiFUNC_PROC >= 2*/ && g_uiFUNC_PROC != 1 )
 	{
 		if(PlayForeEnd_Check()==1)
 		{
-			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
+			DEBUG_PIN0_TOGGLE;
 			g_uiFUNC_PLAY = 2;
+			if(g_uiFUNC_PROC != 6 && g_uiFUNC_PROC != 1)
+			{
+				BUFFER_CTRL_PIN_HI;
+			}
 			F_TestRamPlaySong(SongRam2);
 		}
 	}
-	else if( g_uiFUNC_PLAY == 2 && g_uiFUNC_PROC >= 3 )
+	else if( g_uiFUNC_PLAY == 2 /*&& g_uiFUNC_PROC >= 3*/ && g_uiFUNC_PROC != 2 )
 	{
 		if(PlayForeEnd_Check()==1)
 		{
-			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
+			DEBUG_PIN0_TOGGLE;
 			g_uiFUNC_PLAY = 3;
+			if(g_uiFUNC_PROC != 1 && g_uiFUNC_PROC != 2)
+			{
+				BUFFER_CTRL_PIN_HI;
+			}
 			F_TestRamPlaySong(SongRam3);
 		}
 	}
-	else if( g_uiFUNC_PLAY == 3 && g_uiFUNC_PROC >= 4 )
+	else if( g_uiFUNC_PLAY == 3 /*&& g_uiFUNC_PROC >= 4*/ && g_uiFUNC_PROC != 3 )
 	{
 		if(PlayForeEnd_Check()==1)
 		{
-			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
+			DEBUG_PIN0_TOGGLE;
 			g_uiFUNC_PLAY = 4;
+			if(g_uiFUNC_PROC != 2 && g_uiFUNC_PROC != 3)
+			{
+				BUFFER_CTRL_PIN_HI;
+			}
 			F_TestRamPlaySong(SongRam4);
 		}
 	}
-	else if( g_uiFUNC_PLAY == 4 && g_uiFUNC_PROC >= 5 )
+	else if( g_uiFUNC_PLAY == 4 /*&& g_uiFUNC_PROC >= 5*/ && g_uiFUNC_PROC != 4 )
 	{
 		if(PlayForeEnd_Check()==1)
 		{
-			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
+			DEBUG_PIN0_TOGGLE;
 			g_uiFUNC_PLAY = 5;
+			if(g_uiFUNC_PROC != 3 && g_uiFUNC_PROC != 4)
+			{
+				BUFFER_CTRL_PIN_HI;
+			}
 			F_TestRamPlaySong(SongRam5);
 		}
 	}
-	else if( g_uiFUNC_PLAY == 5 && g_uiFUNC_PROC >= 6 )
+	else if( g_uiFUNC_PLAY == 5 /*&& g_uiFUNC_PROC >= 6*/ && g_uiFUNC_PROC != 5 )
 	{
 		if(PlayForeEnd_Check()==1)
 		{
-			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
+			DEBUG_PIN0_TOGGLE;
 			g_uiFUNC_PLAY = 6;
+			if(g_uiFUNC_PROC != 4 && g_uiFUNC_PROC != 5)
+			{
+				BUFFER_CTRL_PIN_HI;
+			}
 			F_TestRamPlaySong(SongRam6);
 		}
 	}
@@ -154,7 +179,7 @@ void SPI_RX_FUNC_1(void)
 	{
 		if(PlayForeEnd_Check()==1)
 		{
-			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
+			DEBUG_PIN0_TOGGLE;
 			g_uiFUNC_PLAY = 7;
 			F_TestRamPlaySong(SongRam7);
 		}
@@ -163,7 +188,7 @@ void SPI_RX_FUNC_1(void)
 	{
 		if(PlayForeEnd_Check()==1)
 		{
-			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
+			DEBUG_PIN0_TOGGLE;
 			g_uiFUNC_PLAY = 8;
 			F_TestRamPlaySong(SongRam8);
 		}
@@ -172,7 +197,7 @@ void SPI_RX_FUNC_1(void)
 	{
 		if(PlayForeEnd_Check()==1)
 		{
-			_setSR(SFR_P3, _getSR(SFR_P3)^0x0001);
+			DEBUG_PIN0_TOGGLE;
 			g_uiFUNC_PLAY = 9;
 			F_TestRamPlaySong(SongRam9);
 		}
@@ -189,20 +214,22 @@ void MainRoutine(void)
 		g_uiSPI_BUF_INDEX = 0;
 
 #ifdef ENABLE_PIN_WAKEUP
-		g_uiFUNC_INI_SELECT = 0;
+		g_uiFUNC_INI_SELECT = 2;
 
-		g_uiFUNC_SELECT = 0;
+		g_uiFUNC_SELECT = 1;
+
+		SongRam = SongRam1;	// initialization
 #else
 		g_uiFUNC_INI_SELECT = 1;
 
 		g_uiFUNC_SELECT = 1;
 #endif
-//	F_TestRamPlaySong();	//YQ 2013-5-10
+
    while(1)
    {
       Reset_WDT();
 
-	  if(g_uiFUNC_SELECT == 0x0001)
+	  if(g_uiFUNC_SELECT /*== 0x0001*/)
 	  {
          SPI_RX_FUNC_1();
       }
