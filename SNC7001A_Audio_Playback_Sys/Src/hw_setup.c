@@ -37,10 +37,10 @@ void hw_setup(void)
 	Enable_SPI_INT();
 #endif
 
-	_setSR(SFR_P0En, 0x4007);	//enable P00, P01, P02, P14
-	_setSR(SFR_P0M,  0x4004);	//P02 P14 o/p, P01 & P00 i/p
+	_setSR(SFR_P0En, 0x400F);	//enable P00, P01, P02, P03, P14
+	_setSR(SFR_P0M,  0x400C);	//P02 P03 P14 o/p, P01 & P00 i/p
 	_setSR(SFR_P0PH, 0x0003);	//pull-up P01 & P00
-	_setSR(SFR_P0, 	 0x4004);	//P02 P14 initial high
+	_setSR(SFR_P0, 	 0x4004);	//P02 P14 initial high; P03 initial lo
 
 #ifdef ENABLE_PIN_WAKEUP
 	_setSR(SFR_INTEC, _getSR(SFR_INTEC) | 0x0002);	// rising edge

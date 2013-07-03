@@ -8,6 +8,8 @@
 #include "../../SNC7001A_Audio_Playback_Sys/Include/SNC7001A_Audio_Playback_Usage.h"
 #include "hw_setup.h"
 
+extern u16 g_uiMOUTH_STATE;
+
 extern short	 gOutBuf[];
 extern short     POutIdx_asm;
 
@@ -17,7 +19,7 @@ void __interrupt [0x34] DA_ISR(void)
 
 	Clr_SD_DAC_Req();
 
-//	DEBUG_PIN2_TOGGLE;
+//	MOUTH_PIECE_PIN_TOGGLE;
    
     #ifdef WaveMark
 	//=======================WaveMark Usage====================
@@ -42,19 +44,26 @@ void __interrupt [0x34] DA_ISR(void)
 	//=============================================================
 	#endif
    
-
 	gOutAmp = gOutBuf[POutIdx_asm] + gOutBuf[POutIdx_asm + 1] + gOutBuf[POutIdx_asm + 2] + gOutBuf[POutIdx_asm + 3] +
 				gOutBuf[POutIdx_asm + 4] + gOutBuf[POutIdx_asm + 5] + gOutBuf[POutIdx_asm + 6] + gOutBuf[POutIdx_asm + 7];
 
 	gOutAmp = gOutAmp / 8;
 
-	if(gOutAmp >= 1024 || gOutAmp <= -1024)
+	if(gOutAmp >= 256 || gOutAmp <= -256)
 	{
-		DEBUG_PIN2_HI;
+		if(g_uiMOUTH_STATE)
+		{
+			MOUTH_PIECE_PIN_HI;
+		}
+		else
+		{
+			MOUTH_PIECE_PIN_LO;
+		}
 	}
 	else
 	{
-		DEBUG_PIN2_LO;
+		g_uiMOUTH_STATE = 1;
+		MOUTH_PIECE_PIN_LO;
 	}
 
    __asm

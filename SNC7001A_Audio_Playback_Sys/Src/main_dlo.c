@@ -16,6 +16,7 @@ extern u16 g_uiFUNC_SELECT;
 extern u16 g_uiFUNC_INI_SELECT;
 extern u16 g_uiFUNC_PROC;
 extern u16 g_uiFUNC_PLAY;
+extern u16 g_uiMOUTH_STATE;
 
 extern void WaveMarkTrig(void);
 
@@ -61,6 +62,9 @@ void SNAP01DIS(void)
 void F_TestRamPlaySong(int* Song)
 {
 	SNAP01EN();
+	g_uiMOUTH_STATE = 1;
+	T2_ENABLE;
+	Enable_T2_INT();
 	SongRam = Song;
 	PlayFore((__GENERIC int*)SongRam);	
 }
@@ -78,7 +82,9 @@ void SPI_RX_FUNC_1(void)
 	{
 		SD_DAC_Turn_Off();
 		PlayFore_Stop();
-		DEBUG_PIN2_LO;
+		Disable_T2_INT();
+		MOUTH_PIECE_PIN_LO;
+		T2_DISABLE;
 #ifdef AUDIO_BUF_1KW
 		memset(SongRam, 0, 1016);
 #else

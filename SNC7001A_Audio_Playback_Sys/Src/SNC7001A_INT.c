@@ -45,6 +45,7 @@ u16 g_uiFUNC_INI_SELECT;
 u16 g_uiFUNC_PROC;
 u16 g_uiFUNC_PLAY;
 u16 g_uiKEY_CNT;
+u16 g_uiMOUTH_STATE;
 
 //=========================================
 //
@@ -64,7 +65,6 @@ void __interrupt [0x18] T0_ISR(void)
 	Clr_T0_Req();
 
 	g_uiKEY_CNT++;
-	DEBUG_PIN2_TOGGLE;
 
 	if(g_uiKEY_CNT == 3)
 	{
@@ -143,8 +143,6 @@ void __interrupt [0x24] P01_ISR(void)
 	{
 		WAKEUP_PIN_EDGE_TOGGLE;	// reverse edge
 
-//		DEBUG_PIN2_TOGGLE;
-
 		g_uiFUNC_PROC = 0;
 
 		g_uiFUNC_INI_SELECT = 1;
@@ -162,8 +160,6 @@ void __interrupt [0x24] P01_ISR(void)
 	{
 		WAKEUP_PIN_EDGE_TOGGLE;	// reverse edge
 
-//		DEBUG_PIN2_TOGGLE;
-
 //		g_uiFUNC_PROC = 0;
 
 		g_uiFUNC_INI_SELECT = 2;
@@ -179,6 +175,8 @@ void __interrupt [0x24] P01_ISR(void)
 void __interrupt [0x28] T2_ISR(void)
 {
 	Clr_T2_Req();
+
+	g_uiMOUTH_STATE = !g_uiMOUTH_STATE;
 }
 
 //=========================================
